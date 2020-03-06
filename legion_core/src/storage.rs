@@ -19,7 +19,6 @@ use crate::world::TagSet;
 use crate::world::WorldId;
 use derivative::Derivative;
 use fxhash::FxHashMap;
-use smallvec::Drain;
 use smallvec::SmallVec;
 use std::any::TypeId;
 use std::cell::UnsafeCell;
@@ -30,8 +29,6 @@ use std::ops::Deref;
 use std::ops::DerefMut;
 use std::ops::RangeBounds;
 use std::ptr::NonNull;
-use std::slice::Iter;
-use std::slice::IterMut;
 use std::sync::atomic::AtomicU64;
 use std::sync::atomic::Ordering;
 use std::sync::Arc;
@@ -715,7 +712,7 @@ impl ArchetypeData {
 
     pub(crate) fn delete_all(&mut self) {
         for set in &mut self.chunk_sets {
-            // Clearing the chunk
+            // Clearing the chunk will Drop all the data
             set.chunks.clear();
         }
     }
@@ -1103,13 +1100,11 @@ impl ArchetypeData {
         self.chunk_sets.iter().flat_map(move |set| {
             set.chunks
                 .iter()
-                .flat_map(move |chunk| chunk.entities().iter().map(|e| *e))
+                .flat_map(move |chunk| chunk.entities().iter().copied())
         })
     }
 
-    /// Iterate all entities in existence by iterating across archetypes, chunk sets, and chunks
-    /// Returns the EntityLocation as well as the Entity
-    pub(crate) fn enumerate_entities<'a>(
+    pub(crate) fn iter_entity_locations<'a>(
         &'a self,
         archetype_index: ArchetypeIndex,
     ) -> impl Iterator<Item = (Entity, EntityLocation)> + 'a {
@@ -1620,16 +1615,18 @@ impl Components {
             .map(move |i| unsafe { &mut self.0.get_unchecked_mut(i).1 })
     }
 
-    fn iter(&mut self) -> Iter<(ComponentTypeId, ComponentResourceSet)> {
+    fn iter(&mut self) -> impl Iterator<Item = &(ComponentTypeId, ComponentResourceSet)> + '_ {
         self.0.iter()
     }
 
-    fn iter_mut(&mut self) -> IterMut<(ComponentTypeId, ComponentResourceSet)> {
+    fn iter_mut(
+        &mut self,
+    ) -> impl Iterator<Item = &mut (ComponentTypeId, ComponentResourceSet)> + '_ {
         self.0.iter_mut()
     }
 
-    fn drain(&mut self) -> Drain<(ComponentTypeId, ComponentResourceSet)> {
-        self.0.drain()
+    fn drain(&mut self) -> impl Iterator<Item = (ComponentTypeId, ComponentResourceSet)> + '_ {
+        self.0.drain(..)
     }
 }
 

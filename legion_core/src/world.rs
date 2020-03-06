@@ -205,6 +205,16 @@ impl World {
         }
     }
 
+    /// Iterate all entities in existence. Internally this iterates archetypes instead of
+    /// entity allocators because the data structures contains a list of free entities instead
+    /// of allocated entities
+    pub fn iter_entities<'a>(&'a self) -> impl Iterator<Item = Entity> + 'a {
+        self.storage()
+            .archetypes()
+            .iter()
+            .flat_map(|archetype_data| archetype_data.iter_entities().map(|entity| entity))
+    }
+
     /// Inserts new entities into the world. This insertion method should be preferred, as it performs
     /// no movement of components for inserting multiple entities and components.
     ///
@@ -321,6 +331,15 @@ impl World {
             // record swapped entity's new location
             self.entity_locations.set(swapped, location);
         }
+    }
+
+    /// Delete all entity data. This leaves subscriptions and the command buffer intact.
+    pub fn delete_all(&mut self) {
+        for archetype in self.storage_mut().archetypes_mut() {
+            archetype.delete_all();
+        }
+
+        self.entity_allocator.delete_all_entities();
     }
 
     fn find_chunk_with_delta(
@@ -765,24 +784,6 @@ impl World {
         RefMapMutSet::new(borrows, refs)
     }
 
-    /// Iterate all entities in existence. Internally this iterates archetypes instead of
-    /// entity allocators because the data structures contains a list of free entities instead
-    /// of allocated entities
-    pub fn iter_entities<'a>(&'a self) -> impl Iterator<Item = Entity> + 'a {
-        self.storage()
-            .archetypes()
-            .iter()
-            .flat_map(|archetype_data| archetype_data.iter_entities().map(|entity| entity))
-    }
-
-    pub fn delete_all(&mut self) {
-        for archetype in self.storage_mut().archetypes_mut() {
-            archetype.delete_all();
-        }
-
-        self.entity_allocator.delete_all_entities();
-    }
-
     /// Mutably borrows entity data for the given entity.
     ///
     /// Returns `Some(data)` if the entity was found and contains the specified data.
@@ -912,7 +913,7 @@ impl World {
 
             // update entity locations
             let archetype = &unsafe { &*self.storage.get() }.archetypes()[target_archetype];
-            for (entity, location) in archetype.enumerate_entities(target_archetype) {
+            for (entity, location) in archetype.iter_entity_locations(target_archetype) {
                 self.entity_locations.set(entity, location);
             }
         }

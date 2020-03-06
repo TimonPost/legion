@@ -24,9 +24,7 @@ impl Entity {
         Entity { index, version }
     }
 
-    pub fn index(self) -> EntityIndex {
-        self.index
-    }
+    pub fn index(self) -> EntityIndex { self.index }
 }
 
 impl Display for Entity {
@@ -319,20 +317,22 @@ impl EntityAllocator {
     }
 
     pub(crate) fn delete_all_entities(&self) {
-        for mut block in self.blocks.write().blocks.drain(..) {
-            let mut block = block.unwrap();
-
-            // If any entity in the block is in an allocated state, clear and repopulate the free
-            // list, forcing all entities into an unallocated state, but without loosing version
-            // info
-            if block.free.len() < block.versions.len() {
-                block.free.clear();
-                for i in 0..block.versions.len() {
-                    block.free.push(i as u32 + block.start);
+        for block in self.blocks.write().blocks.drain(..) {
+            if let Some(mut block) = block {
+                // If any entity in the block is in an allocated state, clear
+                // and repopulate the free list. This forces all entities into an
+                // unallocated state. Bump versions of all entity indexes to
+                // ensure that we don't reuse the same entity.
+                if block.free.len() < block.versions.len() {
+                    block.free.clear();
+                    for (i, version) in block.versions.iter_mut().enumerate() {
+                        *version += Wrapping(1);
+                        block.free.push(i as u32 + block.start);
+                    }
                 }
-            }
 
-            self.allocator.lock().free(block);
+                self.allocator.lock().free(block);
+            }
         }
     }
 
@@ -343,9 +343,7 @@ impl EntityAllocator {
 }
 
 impl Drop for EntityAllocator {
-    fn drop(&mut self) {
-        self.delete_all_entities();
-    }
+    fn drop(&mut self) { self.delete_all_entities(); }
 }
 
 pub struct CreateEntityIter<'a> {
