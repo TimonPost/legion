@@ -88,9 +88,7 @@ impl Subscribers {
         }
     }
 
-    pub fn push(&mut self, subscriber: Subscriber) {
-        self.subscribers.push(subscriber);
-    }
+    pub fn push(&mut self, subscriber: Subscriber) { self.subscribers.push(subscriber); }
 
     pub fn send(&mut self, message: Event) {
         for i in (0..self.subscribers.len()).rev() {
@@ -134,7 +132,5 @@ impl Subscribers {
 }
 
 impl Default for Subscribers {
-    fn default() -> Self {
-        Subscribers::new()
-    }
+    fn default() -> Self { Subscribers::new() }
 }

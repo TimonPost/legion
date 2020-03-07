@@ -28,14 +28,10 @@ impl<'a, T> Iterator for SliceVecIter<'a, T> {
     }
 
     #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.counts.len(), Some(self.counts.len()))
-    }
+    fn size_hint(&self) -> (usize, Option<usize>) { (self.counts.len(), Some(self.counts.len())) }
 
     #[inline]
-    fn count(self) -> usize {
-        self.len()
-    }
+    fn count(self) -> usize { self.len() }
 }
 
 impl<'a, T> ExactSizeIterator for SliceVecIter<'a, T> {}
@@ -89,9 +85,7 @@ pub(crate) struct FissileEnumerate<I: FissileIterator> {
     count: usize,
 }
 impl<I: FissileIterator> FissileEnumerate<I> {
-    pub(crate) fn new(iter: I) -> Self {
-        Self { iter, count: 0 }
-    }
+    pub(crate) fn new(iter: I) -> Self { Self { iter, count: 0 } }
 }
 impl<I: FissileIterator> Iterator for FissileEnumerate<I>
 where
@@ -109,9 +103,7 @@ where
     }
 
     #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.iter.size_hint()
-    }
+    fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 
     #[inline]
     fn nth(&mut self, n: usize) -> Option<(usize, I::Item)> {
@@ -123,9 +115,7 @@ where
     }
 
     #[inline]
-    fn count(self) -> usize {
-        self.iter.count()
-    }
+    fn count(self) -> usize { self.iter.count() }
 
     #[inline]
     fn fold<Acc, Fold>(self, init: Acc, mut fold: Fold) -> Acc
@@ -159,9 +149,7 @@ impl<I: FissileIterator> FissileIterator for FissileEnumerate<I> {
 }
 
 impl<I: ExactSizeIterator + FissileIterator> ExactSizeIterator for FissileEnumerate<I> {
-    fn len(&self) -> usize {
-        self.iter.len()
-    }
+    fn len(&self) -> usize { self.iter.len() }
 }
 
 impl<I: FusedIterator + FissileIterator> FusedIterator for FissileEnumerate<I> {}
@@ -193,9 +181,7 @@ pub struct FissileZip<A, B> {
 }
 
 impl<A, B> FissileZip<A, B> {
-    pub(crate) fn new(a: A, b: B) -> Self {
-        Self { a, b }
-    }
+    pub(crate) fn new(a: A, b: B) -> Self { Self { a, b } }
 }
 
 impl<A: Iterator, B: Iterator> Iterator for FissileZip<A, B> {

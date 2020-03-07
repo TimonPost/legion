@@ -119,9 +119,7 @@ unsafe impl Sync for SystemBox {}
 
 impl SystemBox {
     #[cfg(feature = "par-schedule")]
-    unsafe fn get(&self) -> &dyn Schedulable {
-        std::ops::Deref::deref(&*self.0.get())
-    }
+    unsafe fn get(&self) -> &dyn Schedulable { std::ops::Deref::deref(&*self.0.get()) }
 
     #[allow(clippy::mut_from_ref)]
     unsafe fn get_mut(&self) -> &mut dyn Schedulable {
@@ -467,9 +465,7 @@ impl Builder {
     }
 
     /// Finalizes the builder into a `Schedule`.
-    pub fn build(self) -> Schedule {
-        self.into()
-    }
+    pub fn build(self) -> Schedule { self.into() }
 }
 
 impl Default for Builder {
@@ -518,9 +514,7 @@ pub struct Schedule {
 
 impl Schedule {
     /// Creates a new schedule builder.
-    pub fn builder() -> Builder {
-        Builder::default()
-    }
+    pub fn builder() -> Builder { Builder::default() }
 
     /// Executes all of the steps in the schedule.
     pub fn execute(&mut self, world: &mut World, resources: &mut Resources) {
@@ -540,9 +534,7 @@ impl Schedule {
     }
 
     /// Converts the schedule into a vector of steps.
-    pub fn into_vec(self) -> Vec<Step> {
-        self.steps
-    }
+    pub fn into_vec(self) -> Vec<Step> { self.steps }
 }
 
 impl From<Builder> for Schedule {
@@ -554,9 +546,7 @@ impl From<Builder> for Schedule {
 }
 
 impl From<Vec<Step>> for Schedule {
-    fn from(steps: Vec<Step>) -> Self {
-        Self { steps }
-    }
+    fn from(steps: Vec<Step>) -> Self { Self { steps } }
 }
 
 #[cfg(test)]

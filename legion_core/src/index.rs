@@ -24,35 +24,25 @@ macro_rules! impl_index {
         impl Index<$index_ty> for [$output_ty] {
             type Output = $output_ty;
             #[inline(always)]
-            fn index(&self, index: $index_ty) -> &Self::Output {
-                &self[index.0]
-            }
+            fn index(&self, index: $index_ty) -> &Self::Output { &self[index.0] }
         }
         impl IndexMut<$index_ty> for [$output_ty] {
             #[inline(always)]
-            fn index_mut(&mut self, index: $index_ty) -> &mut Self::Output {
-                &mut self[index.0]
-            }
+            fn index_mut(&mut self, index: $index_ty) -> &mut Self::Output { &mut self[index.0] }
         }
         impl Index<$index_ty> for Vec<$output_ty> {
             type Output = $output_ty;
             #[inline(always)]
-            fn index(&self, index: $index_ty) -> &Self::Output {
-                &self[index.0]
-            }
+            fn index(&self, index: $index_ty) -> &Self::Output { &self[index.0] }
         }
         impl IndexMut<$index_ty> for Vec<$output_ty> {
             #[inline(always)]
-            fn index_mut(&mut self, index: $index_ty) -> &mut Self::Output {
-                &mut self[index.0]
-            }
+            fn index_mut(&mut self, index: $index_ty) -> &mut Self::Output { &mut self[index.0] }
         }
         impl Deref for $index_ty {
             type Target = usize;
             #[inline(always)]
-            fn deref(&self) -> &usize {
-                &self.0
-            }
+            fn deref(&self) -> &usize { &self.0 }
         }
         impl fmt::Display for $index_ty {
             #[inline]

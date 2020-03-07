@@ -56,21 +56,13 @@ impl EntityLocation {
         }
     }
 
-    pub fn archetype(&self) -> ArchetypeIndex {
-        self.archetype_index
-    }
+    pub fn archetype(&self) -> ArchetypeIndex { self.archetype_index }
 
-    pub fn set(&self) -> SetIndex {
-        self.set_index
-    }
+    pub fn set(&self) -> SetIndex { self.set_index }
 
-    pub fn chunk(&self) -> ChunkIndex {
-        self.chunk_index
-    }
+    pub fn chunk(&self) -> ChunkIndex { self.chunk_index }
 
-    pub fn component(&self) -> ComponentIndex {
-        self.component_index
-    }
+    pub fn component(&self) -> ComponentIndex { self.component_index }
 }
 
 pub(crate) struct Locations {
@@ -78,9 +70,7 @@ pub(crate) struct Locations {
 }
 
 impl Locations {
-    pub fn new() -> Self {
-        Locations { blocks: Vec::new() }
-    }
+    pub fn new() -> Self { Locations { blocks: Vec::new() } }
 
     fn index(entity: EntityIndex) -> (usize, usize) {
         let block = entity as usize / BlockAllocator::BLOCK_SIZE;
@@ -146,9 +136,7 @@ impl BlockAllocator {
         }
     }
 
-    pub fn free(&mut self, block: EntityBlock) {
-        self.free.push(block);
-    }
+    pub fn free(&mut self, block: EntityBlock) { self.free.push(block); }
 }
 
 #[derive(Debug)]
@@ -169,9 +157,7 @@ impl EntityBlock {
         }
     }
 
-    fn index(&self, index: EntityIndex) -> usize {
-        (index - self.start) as usize
-    }
+    fn index(&self, index: EntityIndex) -> usize { (index - self.start) as usize }
 
     pub fn in_range(&self, index: EntityIndex) -> bool {
         index >= self.start && index < (self.start + self.len as u32)
@@ -217,13 +203,9 @@ struct Blocks {
 }
 
 impl Blocks {
-    fn new() -> Self {
-        Self { blocks: Vec::new() }
-    }
+    fn new() -> Self { Self { blocks: Vec::new() } }
 
-    pub fn index(entity: EntityIndex) -> usize {
-        entity as usize / BlockAllocator::BLOCK_SIZE
-    }
+    pub fn index(entity: EntityIndex) -> usize { entity as usize / BlockAllocator::BLOCK_SIZE }
 
     fn find(&self, entity: EntityIndex) -> Option<&EntityBlock> {
         let i = Blocks::index(entity);
@@ -258,15 +240,11 @@ impl Blocks {
 
 impl Deref for Blocks {
     type Target = [Option<EntityBlock>];
-    fn deref(&self) -> &Self::Target {
-        self.blocks.deref()
-    }
+    fn deref(&self) -> &Self::Target { self.blocks.deref() }
 }
 
 impl DerefMut for Blocks {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        self.blocks.deref_mut()
-    }
+    fn deref_mut(&mut self) -> &mut Self::Target { self.blocks.deref_mut() }
 }
 
 /// Manages the allocation and deletion of `Entity` IDs within a world.
@@ -295,9 +273,7 @@ impl EntityAllocator {
     }
 
     /// Allocates a new unused `Entity` ID.
-    pub fn create_entity(&self) -> Entity {
-        self.create_entities().next().unwrap()
-    }
+    pub fn create_entity(&self) -> Entity { self.create_entities().next().unwrap() }
 
     /// Creates an iterator which allocates new `Entity` IDs.
     pub fn create_entities(&self) -> CreateEntityIter {

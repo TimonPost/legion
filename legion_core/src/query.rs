@@ -117,17 +117,13 @@ pub struct Read<T: Component>(PhantomData<T>);
 impl<T: Component> ReadOnly for Read<T> {}
 impl<T: Component> Copy for Read<T> {}
 impl<T: Component> Clone for Read<T> {
-    fn clone(&self) -> Self {
-        *self
-    }
+    fn clone(&self) -> Self { *self }
 }
 
 impl<'a, T: Component> DefaultFilter for Read<T> {
     type Filter = EntityFilterTuple<ComponentFilter<T>, Passthrough, Passthrough>;
 
-    fn filter() -> Self::Filter {
-        super::filter::filter_fns::component()
-    }
+    fn filter() -> Self::Filter { super::filter::filter_fns::component() }
 }
 
 impl<'a, T: Component> View<'a> for Read<T> {
@@ -154,25 +150,15 @@ impl<'a, T: Component> View<'a> for Read<T> {
         RefIter::new(slice_borrow, slice.iter())
     }
 
-    fn validate() -> bool {
-        true
-    }
+    fn validate() -> bool { true }
 
-    fn reads<D: Component>() -> bool {
-        TypeId::of::<T>() == TypeId::of::<D>()
-    }
+    fn reads<D: Component>() -> bool { TypeId::of::<T>() == TypeId::of::<D>() }
 
-    fn writes<D: Component>() -> bool {
-        false
-    }
+    fn writes<D: Component>() -> bool { false }
 
-    fn read_types() -> Vec<ComponentTypeId> {
-        vec![ComponentTypeId::of::<T>()]
-    }
+    fn read_types() -> Vec<ComponentTypeId> { vec![ComponentTypeId::of::<T>()] }
 
-    fn write_types() -> Vec<ComponentTypeId> {
-        Vec::with_capacity(0)
-    }
+    fn write_types() -> Vec<ComponentTypeId> { Vec::with_capacity(0) }
 }
 
 impl<T: Component> ViewElement for Read<T> {
@@ -188,17 +174,13 @@ impl<T: Component> ReadOnly for TryRead<T> {}
 
 impl<T: Component> Copy for TryRead<T> {}
 impl<T: Component> Clone for TryRead<T> {
-    fn clone(&self) -> Self {
-        *self
-    }
+    fn clone(&self) -> Self { *self }
 }
 
 impl<'a, T: Component> DefaultFilter for TryRead<T> {
     type Filter = EntityFilterTuple<Passthrough, Passthrough, Passthrough>;
 
-    fn filter() -> Self::Filter {
-        super::filter::filter_fns::passthrough()
-    }
+    fn filter() -> Self::Filter { super::filter::filter_fns::passthrough() }
 }
 
 impl<'a, T: Component> View<'a> for TryRead<T> {
@@ -221,25 +203,15 @@ impl<'a, T: Component> View<'a> for TryRead<T> {
         }
     }
 
-    fn validate() -> bool {
-        true
-    }
+    fn validate() -> bool { true }
 
-    fn reads<D: Component>() -> bool {
-        TypeId::of::<T>() == TypeId::of::<D>()
-    }
+    fn reads<D: Component>() -> bool { TypeId::of::<T>() == TypeId::of::<D>() }
 
-    fn writes<D: Component>() -> bool {
-        false
-    }
+    fn writes<D: Component>() -> bool { false }
 
-    fn read_types() -> Vec<ComponentTypeId> {
-        vec![ComponentTypeId::of::<T>()]
-    }
+    fn read_types() -> Vec<ComponentTypeId> { vec![ComponentTypeId::of::<T>()] }
 
-    fn write_types() -> Vec<ComponentTypeId> {
-        Vec::with_capacity(0)
-    }
+    fn write_types() -> Vec<ComponentTypeId> { Vec::with_capacity(0) }
 }
 
 impl<T: Component> ViewElement for TryRead<T> {
@@ -253,17 +225,13 @@ pub struct Write<T: Component>(PhantomData<T>);
 
 impl<T: Component> Copy for Write<T> {}
 impl<T: Component> Clone for Write<T> {
-    fn clone(&self) -> Self {
-        *self
-    }
+    fn clone(&self) -> Self { *self }
 }
 
 impl<'a, T: Component> DefaultFilter for Write<T> {
     type Filter = EntityFilterTuple<ComponentFilter<T>, Passthrough, Passthrough>;
 
-    fn filter() -> Self::Filter {
-        super::filter::filter_fns::component()
-    }
+    fn filter() -> Self::Filter { super::filter::filter_fns::component() }
 }
 
 impl<'a, T: Component> View<'a> for Write<T> {
@@ -292,29 +260,19 @@ impl<'a, T: Component> View<'a> for Write<T> {
     }
 
     #[inline]
-    fn validate() -> bool {
-        true
-    }
+    fn validate() -> bool { true }
 
     #[inline]
-    fn reads<D: Component>() -> bool {
-        TypeId::of::<T>() == TypeId::of::<D>()
-    }
+    fn reads<D: Component>() -> bool { TypeId::of::<T>() == TypeId::of::<D>() }
 
     #[inline]
-    fn writes<D: Component>() -> bool {
-        TypeId::of::<T>() == TypeId::of::<D>()
-    }
+    fn writes<D: Component>() -> bool { TypeId::of::<T>() == TypeId::of::<D>() }
 
     #[inline]
-    fn read_types() -> Vec<ComponentTypeId> {
-        vec![ComponentTypeId::of::<T>()]
-    }
+    fn read_types() -> Vec<ComponentTypeId> { vec![ComponentTypeId::of::<T>()] }
 
     #[inline]
-    fn write_types() -> Vec<ComponentTypeId> {
-        vec![ComponentTypeId::of::<T>()]
-    }
+    fn write_types() -> Vec<ComponentTypeId> { vec![ComponentTypeId::of::<T>()] }
 }
 
 impl<T: Component> ViewElement for Write<T> {
@@ -328,17 +286,13 @@ pub struct TryWrite<T: Component>(PhantomData<T>);
 
 impl<T: Component> Copy for TryWrite<T> {}
 impl<T: Component> Clone for TryWrite<T> {
-    fn clone(&self) -> Self {
-        *self
-    }
+    fn clone(&self) -> Self { *self }
 }
 
 impl<'a, T: Component> DefaultFilter for TryWrite<T> {
     type Filter = EntityFilterTuple<Passthrough, Passthrough, Passthrough>;
 
-    fn filter() -> Self::Filter {
-        super::filter::filter_fns::passthrough()
-    }
+    fn filter() -> Self::Filter { super::filter::filter_fns::passthrough() }
 }
 
 impl<'a, T: Component> View<'a> for TryWrite<T> {
@@ -361,29 +315,19 @@ impl<'a, T: Component> View<'a> for TryWrite<T> {
         }
     }
 
-    fn validate() -> bool {
-        true
-    }
+    fn validate() -> bool { true }
 
     #[inline]
-    fn reads<D: Component>() -> bool {
-        TypeId::of::<T>() == TypeId::of::<D>()
-    }
+    fn reads<D: Component>() -> bool { TypeId::of::<T>() == TypeId::of::<D>() }
 
     #[inline]
-    fn writes<D: Component>() -> bool {
-        TypeId::of::<T>() == TypeId::of::<D>()
-    }
+    fn writes<D: Component>() -> bool { TypeId::of::<T>() == TypeId::of::<D>() }
 
     #[inline]
-    fn read_types() -> Vec<ComponentTypeId> {
-        vec![ComponentTypeId::of::<T>()]
-    }
+    fn read_types() -> Vec<ComponentTypeId> { vec![ComponentTypeId::of::<T>()] }
 
     #[inline]
-    fn write_types() -> Vec<ComponentTypeId> {
-        vec![ComponentTypeId::of::<T>()]
-    }
+    fn write_types() -> Vec<ComponentTypeId> { vec![ComponentTypeId::of::<T>()] }
 }
 
 impl<T: Component> ViewElement for TryWrite<T> {
@@ -398,17 +342,13 @@ impl<T: Tag> ReadOnly for Tagged<T> {}
 
 impl<T: Tag> Copy for Tagged<T> {}
 impl<T: Tag> Clone for Tagged<T> {
-    fn clone(&self) -> Self {
-        *self
-    }
+    fn clone(&self) -> Self { *self }
 }
 
 impl<'a, T: Tag> DefaultFilter for Tagged<T> {
     type Filter = EntityFilterTuple<TagFilter<T>, Passthrough, Passthrough>;
 
-    fn filter() -> Self::Filter {
-        super::filter::filter_fns::tag()
-    }
+    fn filter() -> Self::Filter { super::filter::filter_fns::tag() }
 }
 
 impl<'a, T: Tag> View<'a> for Tagged<T> {
@@ -438,29 +378,19 @@ impl<'a, T: Tag> View<'a> for Tagged<T> {
     }
 
     #[inline]
-    fn validate() -> bool {
-        true
-    }
+    fn validate() -> bool { true }
 
     #[inline]
-    fn reads<D: Component>() -> bool {
-        false
-    }
+    fn reads<D: Component>() -> bool { false }
 
     #[inline]
-    fn writes<D: Component>() -> bool {
-        false
-    }
+    fn writes<D: Component>() -> bool { false }
 
     #[inline]
-    fn read_types() -> Vec<ComponentTypeId> {
-        Vec::with_capacity(0)
-    }
+    fn read_types() -> Vec<ComponentTypeId> { Vec::with_capacity(0) }
 
     #[inline]
-    fn write_types() -> Vec<ComponentTypeId> {
-        Vec::with_capacity(0)
-    }
+    fn write_types() -> Vec<ComponentTypeId> { Vec::with_capacity(0) }
 }
 
 impl<T: Tag> ViewElement for Tagged<T> {
@@ -581,9 +511,7 @@ impl<'a, V: for<'b> View<'b>> Chunk<'a, V> {
 
     /// Get a slice of all entities contained within the chunk.
     #[inline]
-    pub fn entities(&self) -> &'a [Entity] {
-        self.components.entities()
-    }
+    pub fn entities(&self) -> &'a [Entity] { self.components.entities() }
 
     /// Get an iterator of all data contained within the chunk.
     #[inline]
